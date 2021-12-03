@@ -4,33 +4,27 @@ using std::string;
 
 class RAM
 {
-    private:
-        int memory_size = 0;
+private:
+    int memory_size = 0;
 
-        string *ram = nullptr;
+    string *ram = nullptr;
 
-        const int start = 0; 
+    string filename;
 
-        int end = 0; // max 255
+public:
+    RAM(); // default constructor
 
-    public:
-        RAM(); // default constructor
+    ~RAM(); // destructor
 
-        RAM(int size = 0, string filename = ""); // constructor
+    void set_filename(string name);
 
-        ~RAM(); // destructor
+    void init_ram_zero();
 
-        void init_ram_zero();
+    void set_memSize(int size);
 
-        void set_memSize(int size);
+    int get_memSize();
 
-        int get_memSize();
+    void init_mem();
 
-        void init_mem(string file_name);
-
-        void mem_view(string filename);
-
-        void mem_dump(string filename);
-        
-        void Testoutput();
+    void Testoutput();
 };

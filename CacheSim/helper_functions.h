@@ -15,3 +15,5 @@ int HextoDec(string hexVal);
 string HextoBin(string hexVal);
 
 string DectoHex(int decVal);
+
+string HexParser(string hex);

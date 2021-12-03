@@ -5,69 +5,69 @@
 #include "config.h"
 using namespace std;
 
-
 void Config::alloc()
 {
     string prompts[6] = {
         "cache size: ",
         "data block size: ",
         "associativity: ",
-        "replacement policy ",
+        "replacement policy: ",
         "write hit policy: ",
-        "write miss policy: "
-    };
+        "write miss policy: "};
     // maybe enumerate this instead
     Type type[6] = {C, B, E, RP, WH, WM}; // for enumeration of is_valid
     int i = 0;
-    while(i < 6)
+    cout << "configure the cache:" << endl;
+    while (i < 6)
     {
-        cout <<prompts[i];
+        cout << prompts[i];
         cin >> configs[i];
-        if (!is_valid(type[i],configs[i]))
+        if (!is_valid(type[i], configs[i]))
         {
-            cout <<"\nInvalid input!"<<endl;        
+            cout << "Invalid input!" << endl;
             continue;
         }
-        cache_size = configs[i];
-        cout << endl; // and continue
-        i++;   
+        i++;
     }
+    cout << "cache successfully configured!" << endl;
 }
 
 bool Config::is_valid(Type type, int parameter)
 {
-    bool valid = false;
+    bool valid = true;
+    // breaks defaults to valid = true;
     switch (type)
     {
-        case 0:
-            // Cache size
-            if (cache_size >= 8 && cache_size <= 256)
-            {
-                valid = false;
-            }
+    case 0:
+        // Cache size
+        if (parameter < 8 || parameter > 256)
+        {
+            return false;
+        }
+        break;
+    case 1:
+        // block size
+        break;
+    case 2:
+        // associativity
+        if (parameter == 1 || parameter == 2 || parameter == 4)
+        {
             break;
-        case 1:
-            // block size
-            if (false)
-            {
-                valid = false;
-            }
+        }
+        return false;
+    case 3:
+        // replacement policy
+    case 4:
+        // Write hit policy
+    case 5:
+        // write miss policy
+        if (parameter == 1 || parameter == 2)
+        {
             break;
-        case 2:
-            // associativity
-            break;
-        case 3:
-            // replacement policy
-            break;
-        case 4:
-            // Write hit policy
-            break;
-        case 5:
-            // write miss policy
-            break;
-        default:
-            valid = true;
-            break;
+        }
+        return false;
+    default:
+        break;
     }
     return valid;
 }

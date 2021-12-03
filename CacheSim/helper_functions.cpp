@@ -1,22 +1,25 @@
 #include <iostream>
 #include <string>
 #include <vector>
+using std::cout;
+using std::endl;
 using std::string;
 using std::vector;
-
-
 
 int HextoDec(string hexVal)
 {
     int len = hexVal.size();
     int base = 1;
     int dec_val = 0;
-    for (int i = len - 1; i >= 0; i--) {
-        if (hexVal[i] >= '0' && hexVal[i] <= '9') {
+    for (int i = len - 1; i >= 0; i--)
+    {
+        if (hexVal[i] >= '0' && hexVal[i] <= '9')
+        {
             dec_val += (int(hexVal[i]) - 48) * base;
             base = base * 16;
         }
-        else if (hexVal[i] >= 'A' && hexVal[i] <= 'F') {
+        else if (hexVal[i] >= 'A' && hexVal[i] <= 'F')
+        {
             dec_val += (int(hexVal[i]) - 55) * base;
             base = base * 16;
         }
@@ -28,10 +31,12 @@ string HextoBin(string hexVal)
 {
     long int i = 0;
     string bin = "";
- 
-    while (hexVal[i]) {
- 
-        switch (hexVal[i]) {
+
+    while (hexVal[i])
+    {
+
+        switch (hexVal[i])
+        {
         case '0':
             bin += "0000";
             break;
@@ -94,35 +99,50 @@ string HextoBin(string hexVal)
     return bin;
 }
 
-
 string DectoHex(int decVal)
 { // max will be 256
-    vector <char> hexaDeciNum;
+    vector<char> hexaDeciNum;
     string Hex = "";
     if (decVal == 0)
     {
         return "00";
     }
-    while (decVal != 0) {
+    while (decVal != 0)
+    {
         // temporary variable to store remainder
         int temp = 0;
- 
+
         // storing remainder in temp variable.
         temp = decVal % 16;
- 
+
         // check if temp < 10
-        if (temp < 10) {
+        if (temp < 10)
+        {
             hexaDeciNum.push_back(temp + 48);
         }
-        else {
+        else
+        {
             hexaDeciNum.push_back(temp + 55);
         }
         decVal = decVal / 16;
     }
     // if only one value was stored, then the left most digit is 0
-    if (hexaDeciNum.size() == 1){hexaDeciNum.push_back('0');}
+    if (hexaDeciNum.size() == 1)
+    {
+        hexaDeciNum.push_back('0');
+    }
     // printing hexadecimal number array in reverse order
     Hex += hexaDeciNum[1];
     Hex += hexaDeciNum[0];
     return Hex;
+}
+
+string HexParser(string hex)
+{ // intput is a 2 digit hex number in 0x format, I want to remove the ox part
+    string newHex = "";
+    for (int i = 2; i < hex.length(); i++)
+    {
+        newHex += hex[i];
+    }
+    return newHex;
 }
