@@ -12,7 +12,6 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	string Datafilename = argv[argc - 1]; // grabs command line file arg
-	cout << Datafilename << endl;
 	/*
 	ifstream myfile(Datafilename);
 	string data;

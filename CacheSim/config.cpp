@@ -71,3 +71,26 @@ bool Config::is_valid(Type type, int parameter)
     }
     return valid;
 }
+
+int *Config::get_SysParameters()
+{
+    int *SysPar = configs; // points to memory location of configs array
+    return SysPar; // return the pointer!
+}
+
+void Config::view_inputs()
+{
+    string prompts[6] = {
+        "cache size: ",
+        "data block size: ",
+        "associativity: ",
+        "replacement policy: ",
+        "write hit policy: ",
+        "write miss policy: "};
+    int i = 0;
+    for (auto prompt:prompts)
+    {
+        cout << prompt << configs[i] << endl;
+        i++;
+    }
+}

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "config.h"
 #include "cache.h"
 #include "ram.h"
 #include "helper_functions.h"
@@ -10,22 +11,47 @@ using std::endl;
 using std::ifstream;
 using std::string;
 
-Cache::Cache(string Datafilename)
-{
-    RAM mem;      // initialize ram
-    Config setup; //configuration
-    ram_memory = &mem;
-    cache_setup = &setup;
-
-    ram_memory->set_filename(Datafilename);
-    ram_memory->init_mem();
-
-    cache_setup->alloc();
+void Cache::init_cache()
+{ // initialize the cold cache
+    
 }
 
-Cache::~Cache()
+void Cache::cache_menu()
 {
-    // destructors withing the objects already activated
-    ram_memory = nullptr;
-    cache_setup = nullptr;
+
+}
+
+void Cache::cache_read(int rep_policy, string hexAddress)
+{
+
+}
+
+void Cache::cache_write(int write_policy)
+{
+
+}
+
+void Cache::cache_flush()
+{
+
+}
+
+void Cache::cache_view()
+{
+
+}
+
+void Cache::memory_view()
+{
+
+}
+
+void Cache::cache_dump()
+{
+
+}
+
+void Cache::memory_dump()
+{
+
 }
