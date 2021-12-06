@@ -10,7 +10,7 @@ private:
     int write_hit_policy = 0;
     int write_miss_policy = 0;
 
-    //system parameters
+    //system parameters B,C,E
     int configs[6] = {
         cache_size,
         block_size,
@@ -36,8 +36,7 @@ public:
 
     void alloc();
 
-    int* get_SysParameters();
+    int *get_SysParameters();
 
     void view_inputs();
-
 };

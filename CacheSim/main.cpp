@@ -48,6 +48,28 @@ int main(int argc, char *argv[])
 	//configuration.alloc();
 
 	Cache cache(Datafilename);
+	cache.init_cache();
+	cache.cache_read("03");
+
+	/*
+	Cache cache(Datafilename);
+	cout << "\nInitializing cache..."
+		 << endl;
+	cache.init_cache();
+	cout << "Cache initialized successfully!\n"
+		 << endl;
+
+	bool is_quitting = false;
+	while (!is_quitting)
+	{
+		cout << endl;
+		bool valid_choice = cache.cache_menu_handling(is_quitting);
+		if (!valid_choice)
+		{
+			continue; // start loop again from beginning
+		}
+	}
+	*/
 
 	return 0;
 }

@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 using std::cout;
 using std::endl;
+using std::pow;
 using std::string;
 using std::vector;
 
@@ -97,6 +99,21 @@ string HextoBin(string hexVal)
         i++;
     }
     return bin;
+}
+
+int BintoDec(string binVal)
+{
+    int decValue = 0;
+    int indexCounter = 0;
+    for (int i = binVal.length() - 1; i >= 0; i--)
+    {
+        if (binVal[i] == '1')
+        {
+            decValue += pow(2, indexCounter);
+        }
+        indexCounter++;
+    }
+    return decValue;
 }
 
 string DectoHex(int decVal)
