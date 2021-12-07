@@ -1,8 +1,14 @@
 #pragma once
+#include <vector>
+#include <string>
+#include <queue>
 #include "ram.h"
 #include "config.h"
 #include <cmath>
 using std::log2;
+using std::string;
+using std::vector;
+
 /*
 Holds the Cache class-> mothership of the program
 */
@@ -23,6 +29,9 @@ private:
     int b = 0;                                       // number of block offset bits
     int E = 0;                                       // number of lines per set
     int t = 0;                                       // number of tag bits
+
+    int cache_hits = 0;
+    int cache_misses = 0;
 
     // cache storage: 3-d Array of sizes [set number][lines(or associativity number)]
     string ***cache_storage = nullptr;
@@ -56,7 +65,12 @@ public:
         delete[] cache_storage;
         cache_storage = nullptr;
     }
-    void RR(string tag,int setIndex,int blockOffset, string hexAddress);
+
+    string access_data(int addressIndex);
+
+    void RR(string tag, int setIndex, int blockOffset, string hexAddress, int &evictionLineIndex);
+
+    void LRU(string tag, int setIndex, int blockIndex, string hexAddress, int &evictionLineIndex);
 
     void set_valid_bit(int line, int setIndex, string newVBit);
 
@@ -64,7 +78,7 @@ public:
 
     bool cache_hit_or_miss(string tag, int setIndex);
 
-    void add_cache_block(int setIndex,int blockOffset, int random_line_index, int addressIndex);
+    void add_cache_block(int setIndex, string tag, int line, int addressIndex);
 
     //creates and initializes cache storage
     void init_cache();
@@ -83,9 +97,7 @@ public:
 
     void cache_view();
 
-    void memory_view();
-
     void cache_dump();
 
-    void memory_dump();
+    void cacheTestOutput();
 };

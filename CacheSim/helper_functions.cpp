@@ -157,9 +157,7 @@ string DectoHex(int decVal)
 string HexParser(string hex)
 { // intput is a 2 digit hex number in 0x format, I want to remove the ox part
     string newHex = "";
-    for (int i = 2; i < hex.length(); i++)
-    {
-        newHex += hex[i];
-    }
+    newHex += hex[2];
+    newHex += hex[3];
     return newHex;
 }

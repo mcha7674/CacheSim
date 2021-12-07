@@ -17,9 +17,6 @@ RAM::RAM() // default constructor
 
 RAM::~RAM()
 {
-    delete[] ram;
-    ram = nullptr;
-    memory_size = 0;
 }
 
 void RAM::set_filename(string name)
@@ -39,16 +36,15 @@ int RAM::get_memSize()
 
 void RAM::init_ram_zero()
 {
-    ram = new string[256];
     for (int i = 0; i < 256; i++)
     { // add values to ram array
-        ram[i] = "00";
+        ram.push_back("00");
     }
 }
 
 void RAM::init_mem()
 {
-    string data;
+    string data = "";
     ifstream myfile(filename);
 
     // ask for range and parse input
@@ -60,7 +56,7 @@ void RAM::init_mem()
     cin >> buffer >> start >> end;
     end = HexParser(end);
     // set the memory size
-    set_memSize(HextoDec(end)+1);
+    set_memSize(HextoDec(end) + 1);
 
     if (myfile.is_open())
     {
@@ -68,7 +64,11 @@ void RAM::init_mem()
         while (i < memory_size)
         { // add values to ram array
             getline(myfile, data);
-            ram[i] = data;
+            // make sure i dont grab end characters like /r or /n
+            string byte = "";
+            byte += data[0];
+            byte += data[1];
+            ram[i] = byte;
             i++;
         }
         cout << "RAM successfully initialized!" << endl;
@@ -87,8 +87,36 @@ void RAM::output()
     }
 }
 
-
-string *RAM::get_ram_storage()
+void RAM::memory_view(int blockSize)
 {
-    return ram;
+    cout << "memory_size: " << ram.size() << endl;
+    cout << "memory_content" << endl
+         << "Address:Data" << endl;
+
+    for (int i = 0; i < ram.size(); ++i)
+    {
+        if (i == 0)
+        {
+            cout << "Ox00:" << ram[0] << " ";
+        }
+
+        else if (i % blockSize == 0)
+        {
+            cout << endl;
+            cout << "0x" << DectoHex(i) << ":" << ram[i] << " ";
+        }
+        else
+        {
+            cout << ram[i] << " ";
+        }
+    }
+}
+
+void RAM::memory_dump()
+{
+}
+
+string RAM::access_data(int addressIndex)
+{
+    return ram.at(addressIndex);
 }

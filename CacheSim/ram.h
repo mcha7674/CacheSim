@@ -1,13 +1,15 @@
 #pragma once
 #include <string>
+#include <vector>
 using std::string;
+using std::vector;
 
 class RAM
 {
 private:
     int memory_size = 0;
 
-    string *ram = nullptr; // memory storage dynamic array
+    vector<string> ram; // memory storage dynamic array
 
     string filename;
 
@@ -28,5 +30,9 @@ public:
 
     void output();
 
-    string *get_ram_storage();
+    void memory_view(int blockSize);
+
+    void memory_dump();
+
+    string access_data(int addressIndex);
 };
