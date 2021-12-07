@@ -48,8 +48,10 @@ int main(int argc, char *argv[])
 	//configuration.alloc();
 
 	Cache cache(Datafilename);
-	cache.init_cache();
 	cache.cache_read("03");
+	//cache.cache_view();
+	cache.memory_view();
+	
 
 	/*
 	Cache cache(Datafilename);

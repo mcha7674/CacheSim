@@ -11,6 +11,8 @@ using std::string;
 
 RAM::RAM() // default constructor
 {
+    //initialize ram array to all zero data
+    init_ram_zero();
 }
 
 RAM::~RAM()
@@ -49,9 +51,6 @@ void RAM::init_mem()
     string data;
     ifstream myfile(filename);
 
-    //initialize ram array
-    init_ram_zero();
-
     // ask for range and parse input
     string buffer = ""; // grabs init-ram
     string start = "";  // grabs start (its always 0)
@@ -61,12 +60,12 @@ void RAM::init_mem()
     cin >> buffer >> start >> end;
     end = HexParser(end);
     // set the memory size
-    set_memSize(HextoDec(end));
+    set_memSize(HextoDec(end)+1);
 
     if (myfile.is_open())
     {
         int i = 0;
-        while (i <= memory_size)
+        while (i < memory_size)
         { // add values to ram array
             getline(myfile, data);
             ram[i] = data;
@@ -80,10 +79,16 @@ void RAM::init_mem()
         cout << "Unable to open file";
 }
 
-void RAM::Testoutput()
+void RAM::output()
 {
     for (int i = 0; i < 256; i++)
     {
         cout << "0x" << DectoHex(i) << ":" << ram[i] << endl;
     }
+}
+
+
+string *RAM::get_ram_storage()
+{
+    return ram;
 }

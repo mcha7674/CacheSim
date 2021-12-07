@@ -7,7 +7,7 @@ class RAM
 private:
     int memory_size = 0;
 
-    string *ram = nullptr;
+    string *ram = nullptr; // memory storage dynamic array
 
     string filename;
 
@@ -26,5 +26,7 @@ public:
 
     void init_mem();
 
-    void Testoutput();
+    void output();
+
+    string *get_ram_storage();
 };

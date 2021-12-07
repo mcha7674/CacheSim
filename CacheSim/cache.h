@@ -9,9 +9,9 @@ Holds the Cache class-> mothership of the program
 class Cache
 {
 private:
-    RAM *ram_memory = nullptr;
+    RAM ram_memory;
 
-    Config *cache_setup = nullptr;
+    Config cache_setup;
 
     int *sys_parameters = nullptr;
     const int address_width = 8;
@@ -30,21 +30,13 @@ private:
 public:
     Cache(string Datafilename)
     {
-        RAM mem;      // initialize ram
-        Config setup; //configuration
-        ram_memory = &mem;
-        cache_setup = &setup;
-
         //initialize ram based on range input
-        ram_memory->set_filename(Datafilename);
-        ram_memory->init_mem();
-
+        ram_memory.set_filename(Datafilename);
+        ram_memory.init_mem();
         // setup system parameters (stored in configs array)
-        cache_setup->alloc();
-
+        cache_setup.alloc();
         // set system parameters from configuration (assignes mem location of configs arr)
-        sys_parameters = cache_setup->get_SysParameters();
-
+        sys_parameters = cache_setup.get_SysParameters();
         //initialize all system parameters
         C = sys_parameters[0];
         B = sys_parameters[1];
@@ -53,17 +45,26 @@ public:
         b = log2(B);
         s = log2(S);
         t = address_width - s - b;
+        // initialize the cache
+        init_cache();
     }
 
     ~Cache()
     {
         // destructors withing the objects already activated
-        ram_memory = nullptr;
-        cache_setup = nullptr;
         sys_parameters = nullptr;
         delete[] cache_storage;
         cache_storage = nullptr;
     }
+    void RR(string tag,int setIndex,int blockOffset, string hexAddress);
+
+    void set_valid_bit(int line, int setIndex, string newVBit);
+
+    int get_valid_bit(int line, int setIndex);
+
+    bool cache_hit_or_miss(string tag, int setIndex);
+
+    void add_cache_block(int setIndex,int blockOffset, int random_line_index, int addressIndex);
 
     //creates and initializes cache storage
     void init_cache();
