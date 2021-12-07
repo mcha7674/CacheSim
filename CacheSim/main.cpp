@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	cache.cache_menu_handling(is_quitting);
 	*/
 
-	/*
+	
 	Cache cache(Datafilename);
 	cout << "\nInitializing cache..."
 		 << endl;
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 			continue; // start loop again from beginning
 		}
 	}
-	*/
+	
 
 	return 0;
 }

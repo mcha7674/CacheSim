@@ -17,6 +17,8 @@ RAM::RAM() // default constructor
 
 RAM::~RAM()
 {
+    delete[] ram;
+    ram = nullptr;
 }
 
 void RAM::set_filename(string name)
@@ -36,9 +38,10 @@ int RAM::get_memSize()
 
 void RAM::init_ram_zero()
 {
+    ram = new string[256];
     for (int i = 0; i < 256; i++)
     { // add values to ram array
-        ram.push_back("00");
+        ram[i] = "00";
     }
 }
 
@@ -89,11 +92,11 @@ void RAM::output()
 
 void RAM::memory_view(int blockSize)
 {
-    cout << "memory_size: " << ram.size() << endl;
+    cout << "memory_size: " << memory_size << endl;
     cout << "memory_content" << endl
          << "Address:Data" << endl;
 
-    for (int i = 0; i < ram.size(); ++i)
+    for (int i = 0; i < memory_size; ++i)
     {
         if (i == 0)
         {
@@ -118,5 +121,10 @@ void RAM::memory_dump()
 
 string RAM::access_data(int addressIndex)
 {
-    return ram.at(addressIndex);
+    return ram[addressIndex];
+}
+
+void RAM::update_data(int addressIndex, string data)
+{
+    ram[addressIndex] = data;
 }

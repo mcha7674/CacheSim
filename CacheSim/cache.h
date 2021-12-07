@@ -5,6 +5,7 @@
 #include "ram.h"
 #include "config.h"
 #include <cmath>
+using std::queue;
 using std::log2;
 using std::string;
 using std::vector;
@@ -35,6 +36,7 @@ private:
 
     // cache storage: 3-d Array of sizes [set number][lines(or associativity number)]
     string ***cache_storage = nullptr;
+    queue <int> address_accessed;
 
 public:
     Cache(string Datafilename)
@@ -90,6 +92,11 @@ public:
         takes replacement policy and address to read in hexadecimal (unparsed)
     */
     void cache_read(string hexAddress);
+
+    void write_through(string tag, int setIndex, int blockIndex, string hexAddress,string byte);
+    void write_back(string tag, int setIndex, int addressblockIndex, string hexAddress,string byte);
+    void no_write_allocate(int addressblockIndex,string byte);
+    void write_allocate(string tag, int setIndex, int addressblockIndex, string hexAddress,string byte);
 
     void cache_write(string hexAddress, string data);
 

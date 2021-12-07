@@ -192,7 +192,7 @@ void Cache::add_cache_block(int setIndex, string tag, int line, int addressIndex
     int lineSize = B + 3;
     int rootIndex = addressIndex - (addressIndex % B);
     cache_storage[setIndex][line][0] = "1";
-    // add tag
+    // add tagz
     cache_storage[setIndex][line][2] = tag;
 
     // add block,
@@ -236,6 +236,36 @@ void Cache::RR(string tag, int setIndex, int blockIndex, string hexAddress, int 
 
 void Cache::LRU(string tag, int setIndex, int blockIndex, string hexAddress, int &evictionLineIndex)
 {
+    // use the used lines queue
+    int line = -1;
+    //replace tag
+    // if empty, no need to check for dirty bit (if dirty we write back to memory)
+    for (int i = 0; i < E; i++) // check for empty lines!
+    {
+        if (cache_storage[setIndex][i][0] == "0")
+        {
+            line = i;
+            break;
+        }
+    }
+    if (line == -1) //no empty lines found, replace least recently used
+    {
+        if ()
+    }
+    int vBit = get_valid_bit(line, setIndex);
+    int addressIndex = BintoDec(HextoBin(hexAddress));
+    if (vBit == 0) // empty no need to check dirty, replace valid bit and update block
+    {
+        set_valid_bit(line, setIndex, "1");
+        //convert address to dec, this is the index of the RAM array
+        add_cache_block(setIndex, tag, line, addressIndex);
+    }
+    else //else if filled check for dirty bit (if dirty we write back to memory)
+    {
+        add_cache_block(setIndex, tag,line, addressIndex);
+    }
+    // update evicted line
+    evictionLineIndex = line;
 }
 
 void Cache::cache_read(string hexAddress)
@@ -284,8 +314,114 @@ void Cache::cache_read(string hexAddress)
     cout << "data:0x" << ram_memory.access_data(HextoDec(hexAddress)) << endl;
 }
 
+void Cache::write_through(string tag, int setIndex, int addressblockIndex, string hexAddress,string byte)
+{
+    int addressIndex = BintoDec(HextoBin(hexAddress));
+    int line = 0;
+    for (int i = 0; i < E; i++) // get line index 
+    {
+        if (cache_storage[setIndex][i][2] == tag) // found tag
+        {
+            line = i;
+            break;
+        }
+    }
+    add_cache_block(setIndex,tag,line,addressIndex); // adds address block
+    // add new byte at address location
+    cache_storage[setIndex][line][addressblockIndex+3] = byte;
+    // update byte in RAM
+    ram_memory.update_data(addressIndex, byte);
+}
+void Cache::write_back(string tag, int setIndex, int addressblockIndex, string hexAddress,string byte)
+{
+    int addressIndex = BintoDec(HextoBin(hexAddress));
+    int line = 0;
+    for (int i = 0; i < E; i++) // get line index 
+    {
+        if (cache_storage[setIndex][i][2] == tag) // found tag
+        {
+            line = i;
+            break;
+        }
+    }
+    add_cache_block(setIndex,tag,line,addressIndex); // adds address block
+    // add new byte at address location
+    cache_storage[setIndex][line][addressblockIndex+3] = byte;
+    //set dirty bit
+    cache_storage[setIndex][line][1] = "1";
+}
+
+void Cache::no_write_allocate(int addressblockIndex,string byte)
+{
+    ram_memory.update_data(addressblockIndex, byte);
+}
+
 void Cache::cache_write(string hexAddress, string data)
 {
+    // first convert parsed hex address to binary
+    string binAddress = HextoBin(hexAddress);
+    //decode variables
+    string tag = "";
+    int setIndex = 0;
+    int blockIndex = 0;
+    //decode and assign variables
+    decode_address(tag, setIndex, blockIndex, binAddress); // for location info
+    //outputs:
+    cout << "set:" << setIndex << endl;
+    // tag in hex!
+    cout << "tag:" << tag << endl;
+    //Process!
+    // cache hit?
+    cout << "hit:";
+    bool cache_hit = cache_hit_or_miss(tag, setIndex);
+    int write_hit_policy = sys_parameters[4];
+    int write_miss_policy = sys_parameters[5];
+    string dirty_bit = "0";
+    // write hit
+    if (cache_hit)
+    {
+        cache_hits += 1;
+        cout << "yes\n";
+        cout << "eviction_line:-1" << endl;
+        cout << "ram_address:-1" << endl;
+        if (write_hit_policy == 1)
+        { //write-through - write to block in cache and update the byte in ram
+            write_through(tag, setIndex, blockIndex, hexAddress,data);
+        }
+        else//write back - write to block in cache only, set dirty bit to 1
+        {
+            dirty_bit = "1";
+            write_back(tag, setIndex, blockIndex, hexAddress,data);
+        }
+    }
+    else //  write miss, address not found in cache
+    {
+        cache_misses += 1;
+        cout << "no"<<endl; // cache miss!
+        int evictionLineIndex = 0;
+        if (write_miss_policy == 1)
+        { //write-allocate- load data from ram to cache, followed by the write_hit option
+            // write-allocate is just the hit options
+            if (write_hit_policy == 1)
+            { //write-through - write to block in cache and update the byte in ram
+                write_through(tag, setIndex, blockIndex, hexAddress,data);
+            }
+            else//write back - write to block in cache only, set dirty bit to 1
+            {
+                dirty_bit = "1";
+                write_back(tag, setIndex, blockIndex, hexAddress,data);
+            }
+        }
+        else
+        { //no-write allocate - update block in RAM only, do not update in cache
+            no_write_allocate(BintoDec(HextoBin(hexAddress)),data);
+        }
+        cout << "eviction_line:" << evictionLineIndex << endl;
+        cout << "ram_address:0x" << hexAddress << endl;
+    }
+    cout << "data:0x" << data << endl;
+    cout <<"dirty_bit:"<<dirty_bit<<endl;
+
 }
 
 void Cache::cache_flush()

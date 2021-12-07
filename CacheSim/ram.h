@@ -9,7 +9,7 @@ class RAM
 private:
     int memory_size = 0;
 
-    vector<string> ram; // memory storage dynamic array
+    string *ram = nullptr; // memory storage dynamic array
 
     string filename;
 
@@ -35,4 +35,11 @@ public:
     void memory_dump();
 
     string access_data(int addressIndex);
+
+    string *get_ram()
+    {
+        return ram;
+    }
+
+    void update_data(int addressIndex, string data);
 };
